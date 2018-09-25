@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+{% for message in app.flashes('notice') %}
+    <div class="flash-notice text-danger">
+        {{ message }}
+    </div>
+{% endfor %}
+
+
+{{ form_start(formLogin) }}
+{{ form_widget(formLogin) }}
+{{ form_end(formLogin) }}
+
+</div>
+
+{% endblock %}

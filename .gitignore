@@ -1,0 +1,9 @@
+/.sonar
+/.git
+.env
+/vendor
+/composer.lock
+/var
+.web-server-pid
+phpunit.xml.dist
+/tests

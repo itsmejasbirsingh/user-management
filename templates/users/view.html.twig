@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <h3>User Detail</h3>
+<p>Name: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Mobile: {{ user.mobile }}</p>
+<p>About: {{ user.about }}</p> 
+<p>Experience: {{ user.exp }} Year's</p> 
+
+<a href="/users">Back</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+<h3>Login</h3>
+
+{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+
+<form action="{{ path('login') }}" method="post">
+    <label for="username">Username:</label>
+    <input  class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" /> </br>
+
+    <label for="password">Password:</label>
+    <input class="form-control" type="password" id="password" name="_password" />   </br>
+
+    <button class="form-control" type="submit">login</button>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+</form>
+
+<strong><a href="/new">Create a user</a>  and login with the same.</strong>
+</div>
+
+
+{% endblock %}
+
+

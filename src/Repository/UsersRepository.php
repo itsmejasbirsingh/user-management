@@ -5,6 +5,11 @@ namespace App\Repository;
 use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\ConstraintViolationList;
+
 
 /**
  * @method Users|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,6 +19,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UsersRepository extends ServiceEntityRepository
 {
+    public $errors = [];
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Users::class);
@@ -46,17 +53,11 @@ $sql .= ' WHERE u.username LIKE "%'.$search.'%" or u.email LIKE "%'.$search.'%" 
 
 $sql .= ' ORDER BY u.id DESC';
 
-
-        
-
-     
+    
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 
-  
-
-  
 
 return $stmt->fetchAll();
 
@@ -76,32 +77,46 @@ public function findByEmail($email): array
     return $stmt->fetchAll();
 }
 
-//    /**
-//     * @return Users[] Returns an array of Users objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Users
+public function validate($input)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $validator = Validation::createValidator();
+
+        $constraint = new Assert\Collection(array(          
+            'username' =>  array( new Assert\Length(array('min' => 3)), new Assert\NotBlank() ),
+            'email' =>   array( new Assert\Email() ),
+            'exp' => new Assert\GreaterThan(3),     
+            'password' => new Assert\NotBlank(),
+            'about' => new Assert\NotBlank(),
+            'mobile' => null, 
+        ));
+
+
+        $violations = $validator->validate($input, $constraint);
+
+        if (count($violations)) {
+            $this->errors = self::violations_to_array($violations);
+            return false;
+        }
+
+        return true;
     }
-    */
+  
+    private function violations_to_array(ConstraintViolationList $violationsList, $propertyPath = null)
+    {
+        $output = array();
+        foreach ($violationsList as $violation) {
+            $output[$violation->getPropertyPath()][] = $violation->getMessage();
+        }
+        if (null !== $propertyPath) {
+            if (array_key_exists($propertyPath, $output)) {
+                $output = array($propertyPath => $output[$propertyPath]);
+            } else {
+                return array();
+            }
+        }
+        return $output;
+    }
+
+
 }

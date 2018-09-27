@@ -16,7 +16,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Users implements UserInterface, \Serializable
 {
-	const NUMBER_OF_ITEMS = 5;
+    const USER_NOT_FOUND = 'User not found!';
+    const MESSAGE = 'message';
+    const SUCCESS = 'success';
+
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -59,6 +63,8 @@ class Users implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mobile;
+
+    
 
    
 
@@ -173,5 +179,5 @@ class Users implements UserInterface, \Serializable
             ) = unserialize($string, ['allowed_classes' => false]);
     }
 
-  
+    
 }

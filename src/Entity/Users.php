@@ -17,8 +17,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Users implements UserInterface, \Serializable
 {
     const USER_NOT_FOUND = 'User not found!';
-    const MESSAGE = 'message';
-    const SUCCESS = 'success';
+    const USER_ADDED = 'User Added!';
+    const USER_UPDATED = 'User Updated';
+    const USER_DELETED = 'User Deleted';
+    const MAX_PAGE_LIMIT = 5;
+    const SHOW_ALL_USERS = 'users_all';
 
 
     /**
